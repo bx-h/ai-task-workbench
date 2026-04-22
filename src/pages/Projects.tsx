@@ -4,11 +4,13 @@ import { useState } from "react";
 import { AppShell } from "@/components/agentdock/AppShell";
 import { Button } from "@/components/ui/button";
 import { NewTaskDialog } from "@/components/agentdock/NewTaskDialog";
+import { NewProjectDialog } from "@/components/agentdock/NewProjectDialog";
 import { useAgentDock } from "@/store/useAgentDock";
 
 export default function Projects() {
   const { projects, tasks } = useAgentDock();
   const [open, setOpen] = useState(false);
+  const [projectOpen, setProjectOpen] = useState(false);
 
   return (
     <AppShell showActivity={false}>
@@ -20,9 +22,14 @@ export default function Projects() {
             <span>projects</span>
             <span className="text-muted-foreground/60">--list</span>
           </div>
-          <Button onClick={() => setOpen(true)} size="sm" className="h-8">
-            <Plus className="mr-1 h-3.5 w-3.5" /> New Task
-          </Button>
+          <div className="flex gap-2">
+            <Button onClick={() => setProjectOpen(true)} size="sm" variant="outline" className="h-8">
+              <Plus className="mr-1 h-3.5 w-3.5" /> New Project
+            </Button>
+            <Button onClick={() => setOpen(true)} size="sm" className="h-8">
+              <Plus className="mr-1 h-3.5 w-3.5" /> New Task
+            </Button>
+          </div>
         </div>
 
         <div className="overflow-hidden rounded-md border border-border bg-surface">
@@ -51,6 +58,7 @@ export default function Projects() {
                         <span className="truncate text-sm font-medium text-foreground">{p.name}</span>
                       </div>
                       <div className="mt-0.5 truncate pl-5 font-mono text-[10px] text-muted-foreground">{p.path}</div>
+                      {!p.trusted && <div className="mt-1 pl-5 font-mono text-[10px] text-status-approval">trust required</div>}
                     </div>
                     <div className="col-span-3 flex items-center gap-1 truncate font-mono text-[11px] text-muted-foreground">
                       <GitBranch className="h-3 w-3" /> {p.branch}
@@ -66,6 +74,7 @@ export default function Projects() {
         </div>
       </div>
       <NewTaskDialog open={open} onOpenChange={setOpen} />
+      <NewProjectDialog open={projectOpen} onOpenChange={setProjectOpen} />
     </AppShell>
   );
 }

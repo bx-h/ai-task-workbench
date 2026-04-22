@@ -1,0 +1,14 @@
+[Unit]
+Description=AgentDock Cloudflare Tunnel
+After=network.target agentdock.service
+Wants=agentdock.service
+
+[Service]
+Type=simple
+WorkingDirectory=%h/workspace/projects/ai-task-workbench
+ExecStart=/usr/local/bin/cloudflared tunnel --config scripts/cloudflare/agentdock-tunnel.yml run
+Restart=on-failure
+RestartSec=3
+
+[Install]
+WantedBy=default.target

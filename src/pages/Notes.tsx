@@ -4,7 +4,7 @@ import { AppShell } from "@/components/agentdock/AppShell";
 import { useAgentDock } from "@/store/useAgentDock";
 
 export default function Notes() {
-  const { tasks, projects } = useAgentDock();
+  const { tasks, projects, addQuickNote } = useAgentDock();
   const [draft, setDraft] = useState("");
   const [saved, setSaved] = useState(false);
 
@@ -12,6 +12,7 @@ export default function Notes() {
 
   function save() {
     if (!draft.trim()) return;
+    void addQuickNote(projects[0]?.name ?? "inbox", draft.trim());
     setSaved(true);
     setTimeout(() => setSaved(false), 1400);
     setDraft("");

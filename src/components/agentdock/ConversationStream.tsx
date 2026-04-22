@@ -1,4 +1,4 @@
-import { FileDiff, FilePlus2, FileX2, Sparkles, User } from "lucide-react";
+import { FileDiff, FilePlus2, FileX2, Sparkles, User, type LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { TaskEvent } from "@/types";
 import { ApprovalCard } from "./ApprovalCard";
@@ -71,7 +71,7 @@ function MetaRow({
   time,
   index,
 }: {
-  icon: any;
+  icon: LucideIcon;
   tag: string;
   tagColor?: string;
   time: string;

@@ -8,7 +8,7 @@ interface Props {
   command: string;
   cwd: string;
   reason: string;
-  risk: "low" | "medium" | "high";
+  risk: "low" | "medium" | "high" | "unknown";
   affects?: string[];
   onApprove: () => void;
   onDeny: () => void;
@@ -20,6 +20,7 @@ const RISK = {
   low: { text: "low", color: "text-status-completed", bg: "bg-status-completed-bg" },
   medium: { text: "medium", color: "text-status-input", bg: "bg-status-input-bg" },
   high: { text: "high", color: "text-status-failed", bg: "bg-status-failed-bg" },
+  unknown: { text: "unknown", color: "text-muted-foreground", bg: "bg-muted" },
 } as const;
 
 export function ApprovalCard({

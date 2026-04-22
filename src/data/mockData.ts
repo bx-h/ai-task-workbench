@@ -1,12 +1,10 @@
-import type { Project, Task, ActivityItem } from "@/types";
-
-export const initialProjects: Project[] = [
+export const initialProjects = [
   { id: "p1", name: "my-api", path: "~/code/my-api", branch: "feat/auth-refresh", defaultAgent: "claude" },
   { id: "p2", name: "billing-service", path: "~/work/billing-service", branch: "main", defaultAgent: "codex" },
   { id: "p3", name: "personal-site", path: "~/code/personal-site", branch: "main", defaultAgent: "claude" },
 ];
 
-export const initialTasks: Task[] = [
+export const initialTasks = [
   {
     id: "t1",
     projectId: "p1",
@@ -192,7 +190,7 @@ export const initialTasks: Task[] = [
   },
 ];
 
-export const initialActivity: ActivityItem[] = [
+export const initialActivity = [
   { id: "a1", text: 'Codex is waiting for approval in "billing-service"', projectName: "billing-service", timestamp: "2m ago", kind: "approval" },
   { id: "a2", text: 'Claude completed "Refactor landing page metadata"', projectName: "personal-site", timestamp: "12m ago", kind: "completed" },
   { id: "a3", text: 'Note saved in "my-api"', projectName: "my-api", timestamp: "18m ago", kind: "note" },

@@ -2,10 +2,13 @@ import { FolderGit2, Plus } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { useAgentDock } from "@/store/useAgentDock";
+import { useState } from "react";
+import { NewProjectDialog } from "./NewProjectDialog";
 
 export function ProjectSidebar() {
   const { projects, tasks, setCurrentProjectId } = useAgentDock();
   const location = useLocation();
+  const [open, setOpen] = useState(false);
 
   return (
     <aside className="hidden h-[calc(100vh-3.5rem)] w-64 shrink-0 flex-col border-r border-border bg-sidebar lg:flex">
@@ -64,11 +67,15 @@ export function ProjectSidebar() {
         })}
       </nav>
       <div className="border-t border-sidebar-border p-2">
-        <button className="flex w-full items-center gap-2 rounded-md border border-dashed border-border px-2.5 py-2 text-xs text-muted-foreground transition-colors hover:border-foreground/30 hover:text-foreground">
+        <button
+          onClick={() => setOpen(true)}
+          className="flex w-full items-center gap-2 rounded-md border border-dashed border-border px-2.5 py-2 text-xs text-muted-foreground transition-colors hover:border-foreground/30 hover:text-foreground"
+        >
           <Plus className="h-3.5 w-3.5" />
           New Project
         </button>
       </div>
+      <NewProjectDialog open={open} onOpenChange={setOpen} />
     </aside>
   );
 }

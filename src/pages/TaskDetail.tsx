@@ -37,7 +37,7 @@ const SKILLS = ["Code Review", "Test Writer", "Refactor Plan", "Debugger"];
 export default function TaskDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { tasks, projects, approveTask, denyTask, updateTaskNote } = useAgentDock();
+  const { tasks, projects, approveTask, denyTask, updateTaskNote, followUpTask, cancelTask, archiveTask } = useAgentDock();
   const task = tasks.find((t) => t.id === id);
   const project = projects.find((p) => p.id === task?.projectId);
   const siblings = useMemo(() => tasks.filter((t) => t.projectId === task?.projectId), [tasks, task?.projectId]);
@@ -98,8 +98,8 @@ export default function TaskDetail() {
               </div>
             </div>
             <div className="flex flex-wrap items-center gap-1.5">
-              <Button variant="outline" size="sm" className="h-8"><StopCircle className="mr-1.5 h-3.5 w-3.5" />Cancel</Button>
-              <Button variant="ghost" size="sm" className="h-8"><Archive className="mr-1.5 h-3.5 w-3.5" />Archive</Button>
+              <Button variant="outline" size="sm" className="h-8" onClick={() => void cancelTask(task.id)}><StopCircle className="mr-1.5 h-3.5 w-3.5" />Cancel</Button>
+              <Button variant="ghost" size="sm" className="h-8" onClick={() => void archiveTask(task.id)}><Archive className="mr-1.5 h-3.5 w-3.5" />Archive</Button>
               <Button variant="ghost" size="sm" className="h-8"><ExternalLink className="mr-1.5 h-3.5 w-3.5" />Open in Editor</Button>
               <Button size="sm" className="h-8">Continue</Button>
             </div>
@@ -178,7 +178,15 @@ export default function TaskDetail() {
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </div>
-                <Button size="sm" className="h-7 px-3 text-xs" disabled={!composer.trim()} onClick={() => setComposer("")}>
+                <Button
+                  size="sm"
+                  className="h-7 px-3 text-xs"
+                  disabled={!composer.trim()}
+                  onClick={() => {
+                    void followUpTask(task.id, composer.trim());
+                    setComposer("");
+                  }}
+                >
                   <Send className="mr-1 h-3 w-3" /> Send
                 </Button>
               </div>
@@ -244,11 +252,15 @@ export default function TaskDetail() {
 function StatusDot({ status }: { status: import("@/types").TaskStatus }) {
   const map: Record<string, string> = {
     running: "bg-status-running animate-pulse-dot",
+    queued: "bg-status-idle",
     waiting_approval: "bg-status-approval",
     waiting_input: "bg-status-input",
     completed: "bg-status-completed",
     failed: "bg-status-failed",
     blocked: "bg-status-failed",
+    cancelled: "bg-status-idle",
+    interrupted: "bg-status-failed",
+    draft: "bg-status-idle",
     idle: "bg-status-idle",
     archived: "bg-status-idle",
   };
@@ -300,7 +312,7 @@ function InfoPanel({
 
       <div className="grid grid-cols-2 gap-3 pt-1">
         <Meta label="Worktree" value={task.worktree} mono />
-        <Meta label="Agent" value={task.agent === "claude" ? "Claude" : "Codex"} />
+        <Meta label="Agent" value={task.agent === "claude" ? "Claude" : task.agent === "codex" ? "Codex" : "Mock"} />
         <Meta label="Approval mode" value={task.approvalMode === "auto_safe" ? "Auto-safe" : task.approvalMode === "read_only" ? "Read-only" : "Normal"} />
         <Meta label="Elapsed" value={`${task.elapsedMinutes}m`} mono />
       </div>

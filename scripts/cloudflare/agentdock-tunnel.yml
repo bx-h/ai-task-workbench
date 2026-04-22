@@ -1,0 +1,7 @@
+tunnel: 861c99d8-4f9b-45c0-9bb1-d24c54521704
+credentials-file: /home/huangbaixi/.cloudflared/861c99d8-4f9b-45c0-9bb1-d24c54521704.json
+
+ingress:
+  - hostname: agentdock.hbx-happy.com
+    service: http://127.0.0.1:3876
+  - service: http_status:404

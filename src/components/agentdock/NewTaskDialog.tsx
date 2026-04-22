@@ -32,36 +32,35 @@ export function NewTaskDialog({ open, onOpenChange, defaultProjectId }: Props) {
   const { projects, addTask } = useAgentDock();
   const navigate = useNavigate();
   const [projectId, setProjectId] = useState<string>(defaultProjectId ?? projects[0]?.id ?? "");
-  const [agent, setAgent] = useState<AgentType>("claude");
+  const [agent, setAgent] = useState<AgentType>("mock");
   const [title, setTitle] = useState("");
   const [prompt, setPrompt] = useState("");
   const [workspaceMode, setWorkspaceMode] = useState<WorkspaceMode>("auto");
   const [approvalMode, setApprovalMode] = useState<ApprovalMode>("normal");
   const [skill, setSkill] = useState("None");
+  const [submitting, setSubmitting] = useState(false);
 
-  function handleSubmit() {
+  async function handleSubmit() {
     if (!title.trim() || !prompt.trim() || !projectId) return;
-    const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, "-").slice(0, 32);
-    const workspace =
-      workspaceMode === "isolated_worktree"
-        ? `.ai-tasker/worktrees/task-${slug}`
-        : workspaceMode === "project_root"
-          ? "project root"
-          : `.ai-tasker/worktrees/task-${slug}`;
-    const task = addTask({
-      projectId,
-      title: title.trim(),
-      agent,
-      prompt: prompt.trim(),
-      workspace,
-      worktree: workspaceMode === "project_root" ? "—" : `task-${slug}`,
-      approvalMode,
-    });
-    onOpenChange(false);
-    setTitle("");
-    setPrompt("");
-    setSkill("None");
-    navigate(`/tasks/${task.id}`);
+    setSubmitting(true);
+    try {
+      const task = await addTask({
+        projectId,
+        title: title.trim(),
+        agent,
+        prompt: prompt.trim(),
+        workspaceMode,
+        approvalMode,
+        skill: skill === "None" ? undefined : skill,
+      });
+      onOpenChange(false);
+      setTitle("");
+      setPrompt("");
+      setSkill("None");
+      navigate(`/tasks/${task.id}`);
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   return (
@@ -90,6 +89,7 @@ export function NewTaskDialog({ open, onOpenChange, defaultProjectId }: Props) {
               <Select value={agent} onValueChange={(v) => setAgent(v as AgentType)}>
                 <SelectTrigger className="h-9 bg-surface-elevated"><SelectValue /></SelectTrigger>
                 <SelectContent>
+                  <SelectItem value="mock">Mock</SelectItem>
                   <SelectItem value="claude">Claude</SelectItem>
                   <SelectItem value="codex">Codex</SelectItem>
                 </SelectContent>
@@ -151,7 +151,9 @@ export function NewTaskDialog({ open, onOpenChange, defaultProjectId }: Props) {
 
         <DialogFooter className="border-t border-border bg-background/40 px-5 py-3">
           <Button variant="ghost" onClick={() => onOpenChange(false)}>Cancel</Button>
-          <Button onClick={handleSubmit} disabled={!title.trim() || !prompt.trim()}>Create task</Button>
+          <Button onClick={handleSubmit} disabled={!title.trim() || !prompt.trim() || submitting}>
+            {submitting ? "Creating..." : "Create task"}
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

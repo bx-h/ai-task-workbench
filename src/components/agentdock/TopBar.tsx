@@ -1,8 +1,10 @@
 import { Bell, Command, Search, Settings, Terminal } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { useAgentDock } from "@/store/useAgentDock";
 
 export function TopBar() {
+  const { isOffline } = useAgentDock();
   return (
     <header className="sticky top-0 z-30 flex h-14 items-center gap-3 border-b border-border bg-background/80 px-3 backdrop-blur md:px-4">
       <Link to="/" className="flex items-center gap-2 pl-1 pr-2">
@@ -13,6 +15,11 @@ export function TopBar() {
         <span className="hidden rounded border border-border bg-surface-elevated px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground sm:inline-block">
           v0.4.2
         </span>
+        {isOffline && (
+          <span className="hidden rounded border border-status-failed/40 bg-status-failed-bg px-1.5 py-0.5 font-mono text-[10px] text-status-failed sm:inline-block">
+            daemon offline
+          </span>
+        )}
       </Link>
 
       <div className="relative mx-auto hidden max-w-xl flex-1 md:block">
