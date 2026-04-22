@@ -19,6 +19,10 @@ export default {
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
+        surface: {
+          DEFAULT: "hsl(var(--surface))",
+          elevated: "hsl(var(--surface-elevated))",
+        },
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
@@ -57,11 +61,33 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        status: {
+          running: "hsl(var(--status-running))",
+          "running-bg": "hsl(var(--status-running-bg))",
+          approval: "hsl(var(--status-approval))",
+          "approval-bg": "hsl(var(--status-approval-bg))",
+          input: "hsl(var(--status-input))",
+          "input-bg": "hsl(var(--status-input-bg))",
+          completed: "hsl(var(--status-completed))",
+          "completed-bg": "hsl(var(--status-completed-bg))",
+          failed: "hsl(var(--status-failed))",
+          "failed-bg": "hsl(var(--status-failed-bg))",
+          idle: "hsl(var(--status-idle))",
+          "idle-bg": "hsl(var(--status-idle-bg))",
+        },
+        agent: {
+          claude: "hsl(var(--agent-claude))",
+          codex: "hsl(var(--agent-codex))",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
+      },
+      fontFamily: {
+        sans: ["Inter", "ui-sans-serif", "system-ui", "sans-serif"],
+        mono: ['"JetBrains Mono"', "ui-monospace", "SFMono-Regular", "Menlo", "monospace"],
       },
       keyframes: {
         "accordion-down": {
@@ -80,10 +106,15 @@ export default {
             height: "0",
           },
         },
+        "pulse-dot": {
+          "0%, 100%": { opacity: "1" },
+          "50%": { opacity: "0.4" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        "pulse-dot": "pulse-dot 1.6s ease-in-out infinite",
       },
     },
   },
