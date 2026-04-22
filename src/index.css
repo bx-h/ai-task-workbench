@@ -59,6 +59,21 @@ All colors MUST be HSL.
     --agent-claude: 25 90% 60%;
     --agent-codex: 270 70% 65%;
 
+  /* Terminal palette */
+  --term-bg: 220 18% 5%;
+  --term-fg: 210 20% 88%;
+  --term-prompt: 142 65% 55%;
+  --term-muted: 220 9% 45%;
+  --term-cyan: 188 80% 55%;
+  --term-magenta: 300 60% 70%;
+
+  /* Diff palette (gutter strips) */
+  --diff-add-bg: 142 50% 12%;
+  --diff-add-fg: 142 70% 65%;
+  --diff-del-bg: 0 55% 14%;
+  --diff-del-fg: 0 75% 70%;
+  --diff-meta: 199 60% 60%;
+
     --sidebar-background: 220 14% 6%;
     --sidebar-foreground: 220 9% 70%;
     --sidebar-primary: 199 89% 55%;
@@ -93,4 +108,17 @@ All colors MUST be HSL.
   .scrollbar-thin::-webkit-scrollbar-track { background: transparent; }
   .scrollbar-thin::-webkit-scrollbar-thumb { background: hsl(var(--border)); border-radius: 4px; }
   .scrollbar-thin::-webkit-scrollbar-thumb:hover { background: hsl(var(--muted-foreground) / 0.4); }
+
+  /* Subtle CRT-grid for terminal blocks */
+  .terminal-grid {
+    background-color: hsl(var(--term-bg));
+    background-image:
+      linear-gradient(hsl(var(--foreground) / 0.015) 1px, transparent 1px);
+    background-size: 100% 22px;
+  }
+
+  .ansi-prompt { color: hsl(var(--term-prompt)); }
+  .ansi-cyan   { color: hsl(var(--term-cyan)); }
+  .ansi-magenta{ color: hsl(var(--term-magenta)); }
+  .ansi-muted  { color: hsl(var(--term-muted)); }
 }

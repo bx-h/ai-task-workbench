@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Activity, AlertTriangle, CheckCircle2, Plus, Zap } from "lucide-react";
+import { Plus } from "lucide-react";
+import { cn } from "@/lib/utils";
 import { AppShell } from "@/components/agentdock/AppShell";
 import { TaskCard } from "@/components/agentdock/TaskCard";
 import { NewTaskDialog } from "@/components/agentdock/NewTaskDialog";
@@ -26,43 +27,33 @@ export default function Dashboard() {
 
   return (
     <AppShell>
-      <div className="px-4 py-5 md:px-6 md:py-6">
-        <div className="flex flex-wrap items-end justify-between gap-3 pb-5">
-          <div>
-            <h1 className="text-lg font-semibold tracking-tight md:text-xl">Workbench</h1>
-            <p className="mt-0.5 text-xs text-muted-foreground">
-              Local-first overview of every agent across {projects.length} projects.
-            </p>
+      <div className="px-4 py-4 md:px-6 md:py-5">
+        {/* Command-bar style header */}
+        <div className="flex flex-wrap items-center justify-between gap-3 pb-4">
+          <div className="flex items-center gap-2 font-mono text-[12px] text-muted-foreground">
+            <span className="ansi-prompt">❯</span>
+            <span className="text-foreground">agentdock</span>
+            <span>status</span>
+            <span className="text-muted-foreground/60">--all</span>
           </div>
-          <Button onClick={() => setOpen(true)} className="h-9">
-            <Plus className="mr-1.5 h-4 w-4" /> New Task
+          <Button onClick={() => setOpen(true)} size="sm" className="h-8">
+            <Plus className="mr-1 h-3.5 w-3.5" /> New Task
           </Button>
         </div>
 
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-          <StatCard label="Running" value={groups.running.length} icon={Zap} color="text-status-running" bg="bg-status-running-bg" />
-          <StatCard
-            label="Waiting for You"
-            value={groups.waiting.length}
-            icon={AlertTriangle}
-            color="text-status-approval"
-            bg="bg-status-approval-bg"
-          />
-          <StatCard
-            label="Completed Today"
-            value={groups.completed.length}
-            icon={CheckCircle2}
-            color="text-status-completed"
-            bg="bg-status-completed-bg"
-          />
+        {/* Dense status strip */}
+        <div className="grid grid-cols-3 divide-x divide-border overflow-hidden rounded-md border border-border bg-surface">
+          <StatCell label="running" value={groups.running.length} color="text-status-running" />
+          <StatCell label="waiting" value={groups.waiting.length} color="text-status-approval" pulse />
+          <StatCell label="done · today" value={groups.completed.length} color="text-status-completed" />
         </div>
 
-        <div className="mt-6 space-y-6">
+        <div className="mt-5 space-y-5">
           <Section title="Waiting for You" count={groups.waiting.length} accent="text-status-approval">
             {groups.waiting.length === 0 ? (
               <Empty text="No approvals pending. Inbox zero." />
             ) : (
-              <div className="grid gap-2">
+              <div className="grid gap-1.5">
                 {groups.waiting.map((t) => (
                   <TaskCard
                     key={t.id}
@@ -80,7 +71,7 @@ export default function Dashboard() {
             {groups.running.length === 0 ? (
               <Empty text="Nothing running." />
             ) : (
-              <div className="grid gap-2">
+              <div className="grid gap-1.5">
                 {groups.running.map((t) => (
                   <TaskCard key={t.id} task={t} project={projectFor(t)} onClick={() => navigate(`/tasks/${t.id}`)} />
                 ))}
@@ -92,7 +83,7 @@ export default function Dashboard() {
             {groups.completed.length === 0 ? (
               <Empty text="No completed tasks yet." />
             ) : (
-              <div className="grid gap-2">
+              <div className="grid gap-1.5">
                 {groups.completed.map((t) => (
                   <TaskCard key={t.id} task={t} project={projectFor(t)} onClick={() => navigate(`/tasks/${t.id}`)} />
                 ))}
@@ -106,28 +97,16 @@ export default function Dashboard() {
   );
 }
 
-function StatCard({
-  label,
-  value,
-  icon: Icon,
-  color,
-  bg,
-}: {
-  label: string;
-  value: number;
-  icon: typeof Activity;
-  color: string;
-  bg: string;
-}) {
+function StatCell({ label, value, color, pulse }: { label: string; value: number; color: string; pulse?: boolean }) {
   return (
-    <div className="flex items-center gap-3 rounded-lg border border-border bg-surface p-4">
-      <div className={`flex h-9 w-9 items-center justify-center rounded-md ${bg}`}>
-        <Icon className={`h-4 w-4 ${color}`} />
+    <div className="flex items-center justify-between gap-3 px-4 py-2.5">
+      <div className="flex items-center gap-2">
+        <span className={cn("h-1.5 w-1.5 rounded-full", color.replace("text-", "bg-"), pulse && value > 0 && "animate-pulse-dot")} />
+        <span className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">{label}</span>
       </div>
-      <div>
-        <div className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">{label}</div>
-        <div className="text-2xl font-semibold leading-none">{value}</div>
-      </div>
+      <span className={cn("font-mono text-xl font-semibold tabular-nums leading-none", color)}>
+        {String(value).padStart(2, "0")}
+      </span>
     </div>
   );
 }
@@ -135,9 +114,10 @@ function StatCard({
 function Section({ title, count, accent, children }: { title: string; count: number; accent: string; children: React.ReactNode }) {
   return (
     <section>
-      <div className="mb-2 flex items-center gap-2">
-        <h2 className="text-sm font-semibold">{title}</h2>
-        <span className={`font-mono text-[11px] ${accent}`}>{count}</span>
+      <div className="mb-1.5 flex items-center gap-2">
+        <h2 className="font-mono text-[11px] uppercase tracking-wider text-muted-foreground">{title}</h2>
+        <span className={`font-mono text-[11px] tabular-nums ${accent}`}>[{count}]</span>
+        <div className="h-px flex-1 bg-border/60" />
       </div>
       {children}
     </section>

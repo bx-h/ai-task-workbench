@@ -40,7 +40,10 @@ export interface TaskEvent {
   content?: string;
   command?: string;
   output?: string[];
+  exitCode?: number;
+  durationMs?: number;
   files?: { path: string; change: "added" | "modified" | "deleted"; additions?: number; deletions?: number }[];
+  diff?: { path: string; hunks: { header: string; lines: { kind: "add" | "del" | "ctx" | "meta"; text: string }[] }[] };
   approval?: {
     title: string;
     description: string;
@@ -48,6 +51,7 @@ export interface TaskEvent {
     cwd: string;
     reason: string;
     risk: "low" | "medium" | "high";
+    affects?: string[];
   };
 }
 
