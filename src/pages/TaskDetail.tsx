@@ -3,6 +3,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import {
   Archive,
   ArrowLeft,
+  Check,
   ChevronDown,
   ExternalLink,
   FileDiff,
@@ -11,8 +12,10 @@ import {
   Paperclip,
   PencilLine,
   Send,
+  ShieldAlert,
   Sparkles,
   StopCircle,
+  X,
 } from "lucide-react";
 import { AppShell } from "@/components/agentdock/AppShell";
 import { ConversationStream } from "@/components/agentdock/ConversationStream";
@@ -141,6 +144,7 @@ export default function TaskDetail() {
           <div ref={streamRef} className="scrollbar-thin flex-1 overflow-y-auto px-4 py-5 md:px-6">
             <ConversationStream
               events={task.events}
+              cwd={`~/code/${project.name}`}
               onApprove={() => approveTask(task.id)}
               onDeny={() => denyTask(task.id)}
             />
@@ -188,10 +192,44 @@ export default function TaskDetail() {
         </aside>
       </div>
 
+      {/* Mobile sticky approval bar — large touch targets, only shown when waiting */}
+      {task.status === "waiting_approval" && (
+        <div className="fixed inset-x-0 bottom-14 z-40 border-t border-status-approval/40 bg-status-approval-bg/95 px-3 py-2 backdrop-blur xl:hidden">
+          <div className="mb-1.5 flex items-center gap-1.5">
+            <ShieldAlert className="h-3.5 w-3.5 text-status-approval" />
+            <span className="font-mono text-[10px] uppercase tracking-wider text-status-approval">
+              approval required
+            </span>
+            <span className="ml-auto truncate font-mono text-[11px] text-foreground/80">
+              {task.currentActivity}
+            </span>
+          </div>
+          <div className="flex items-stretch gap-2">
+            <button
+              onClick={() => denyTask(task.id)}
+              className="flex h-11 flex-1 items-center justify-center gap-1.5 rounded-md border border-status-failed/40 bg-background text-sm font-medium text-status-failed active:scale-[0.98]"
+            >
+              <X className="h-4 w-4" /> Deny
+            </button>
+            <button
+              onClick={() => approveTask(task.id)}
+              className="flex h-11 flex-[2] items-center justify-center gap-1.5 rounded-md bg-status-approval text-sm font-semibold text-status-approval-bg active:scale-[0.98]"
+            >
+              <Check className="h-4 w-4" /> Approve once
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Mobile FAB for quick note */}
       <Sheet>
         <SheetTrigger asChild>
-          <button className="fixed bottom-20 right-4 z-30 flex h-12 w-12 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg ring-1 ring-border xl:hidden">
+          <button
+            className={cn(
+              "fixed right-4 z-30 flex h-12 w-12 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg ring-1 ring-border xl:hidden",
+              task.status === "waiting_approval" ? "bottom-44" : "bottom-20",
+            )}
+          >
             <PencilLine className="h-5 w-5" />
           </button>
         </SheetTrigger>
