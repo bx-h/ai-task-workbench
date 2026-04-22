@@ -79,6 +79,21 @@ export default {
           claude: "hsl(var(--agent-claude))",
           codex: "hsl(var(--agent-codex))",
         },
+        terminal: {
+          DEFAULT: "hsl(var(--term-bg))",
+          fg: "hsl(var(--term-fg))",
+          prompt: "hsl(var(--term-prompt))",
+          muted: "hsl(var(--term-muted))",
+          cyan: "hsl(var(--term-cyan))",
+          magenta: "hsl(var(--term-magenta))",
+        },
+        diff: {
+          "add-bg": "hsl(var(--diff-add-bg))",
+          "add-fg": "hsl(var(--diff-add-fg))",
+          "del-bg": "hsl(var(--diff-del-bg))",
+          "del-fg": "hsl(var(--diff-del-fg))",
+          meta: "hsl(var(--diff-meta))",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",

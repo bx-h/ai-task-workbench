@@ -46,6 +46,8 @@ export const initialTasks: Task[] = [
         id: "e4",
         type: "command_output",
         timestamp: "17m ago",
+        exitCode: 0,
+        durationMs: 142,
         output: [
           "src/auth/refresh.ts:14:  function rotateRefreshToken(token: string) {",
           "src/auth/refresh.ts:42:    return refreshToken;",
@@ -67,6 +69,24 @@ export const initialTasks: Task[] = [
           { path: "src/auth/refresh.ts", change: "modified", additions: 24, deletions: 11 },
           { path: "src/auth/refresh.test.ts", change: "added", additions: 86, deletions: 0 },
         ],
+        diff: {
+          path: "src/auth/refresh.ts",
+          hunks: [
+            {
+              header: "@@ -38,11 +38,24 @@ export function rotateRefreshToken(token: string) {",
+              lines: [
+                { kind: "ctx", text: "  const session = await store.findByToken(token);" },
+                { kind: "ctx", text: "  if (!session) throw new InvalidTokenError();" },
+                { kind: "del", text: "  const next = signRefreshToken({ jti: session.jti });" },
+                { kind: "del", text: "  return next;" },
+                { kind: "add", text: "  const jti = randomUUID();" },
+                { kind: "add", text: "  const next = signRefreshToken({ jti, sub: session.sub });" },
+                { kind: "add", text: "  await store.rotate(session.id, { jti, parentJti: session.jti });" },
+                { kind: "add", text: "  return next;" },
+              ],
+            },
+          ],
+        },
       },
       {
         id: "e7",
@@ -79,6 +99,7 @@ export const initialTasks: Task[] = [
           cwd: "~/code/my-api/.ai-tasker/worktrees/task-auth-refresh",
           reason: "Validate the refresh token fix with regression tests.",
           risk: "low",
+          affects: ["network: none", "filesystem: read-only", "git: none"],
         },
       },
     ],
