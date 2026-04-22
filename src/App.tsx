@@ -7,6 +7,10 @@ import { AgentDockProvider } from "@/store/useAgentDock";
 import Index from "./pages/Index.tsx";
 import ProjectDetail from "./pages/ProjectDetail.tsx";
 import TaskDetail from "./pages/TaskDetail.tsx";
+import Projects from "./pages/Projects.tsx";
+import Tasks from "./pages/Tasks.tsx";
+import Notes from "./pages/Notes.tsx";
+import Settings from "./pages/Settings.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
@@ -20,12 +24,12 @@ const App = () => (
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Index />} />
-            <Route path="/projects" element={<Index />} />
+            <Route path="/projects" element={<Projects />} />
             <Route path="/projects/:id" element={<ProjectDetail />} />
-            <Route path="/tasks" element={<Index />} />
+            <Route path="/tasks" element={<Tasks />} />
             <Route path="/tasks/:id" element={<TaskDetail />} />
-            <Route path="/notes" element={<Index />} />
-            <Route path="/settings" element={<Index />} />
+            <Route path="/notes" element={<Notes />} />
+            <Route path="/settings" element={<Settings />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
