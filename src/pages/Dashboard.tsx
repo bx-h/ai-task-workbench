@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Activity, AlertTriangle, CheckCircle2, Plus, Zap } from "lucide-react";
+import { Plus } from "lucide-react";
+import { cn } from "@/lib/utils";
 import { AppShell } from "@/components/agentdock/AppShell";
 import { TaskCard } from "@/components/agentdock/TaskCard";
 import { NewTaskDialog } from "@/components/agentdock/NewTaskDialog";
