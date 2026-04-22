@@ -13,7 +13,6 @@ import {
   Send,
   Sparkles,
   StopCircle,
-  X,
 } from "lucide-react";
 import { AppShell } from "@/components/agentdock/AppShell";
 import { ConversationStream } from "@/components/agentdock/ConversationStream";
